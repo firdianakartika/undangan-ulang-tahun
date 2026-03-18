@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Ulang Tahun</title>
+
+<style>
+html, body {
+    margin:0;
+    padding:0;
+    height:100%;
+    font-family:'Times New Roman', Times, serif;
+    overflow-x:hidden;
+}
+
+.container {
+    display:flex;
+    width:500%;
+    height:100%;
+    transition:0.6s;
+}
+
+.page {
+    width:100vw;
+    height:100vh;
+    flex-shrink:0;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+    overflow-y:auto;
+}
+
+/* WARNA */
+.page1{background:#ff9a9e;color:white;}
+.page2{background:#fad0c4;}
+.page3{background:#ffffff;}
+.page4{background:#fff0f5;}
+.page5{background:#ffe0e9;}
+
+/* BUTTON */
+.btn {
+    padding:12px 25px;
+    border:none;
+    border-radius:25px;
+    background:#ff4e50;
+    color:white;
+    margin-top:15px;
+    cursor:pointer;
+}
+
+/* FORM */
+.form-box {
+    background:white;
+    padding:20px;
+    border-radius:20px;
+    width:300px;
+    box-shadow:0 10px 25px rgba(0,0,0,0.1);
+}
+
+input, textarea, select {
+    width:100%;
+    padding:10px;
+    margin:8px 0;
+    border-radius:10px;
+    border:1px solid #ddd;
+}
+
+/* SEARCH */
+.search-wrapper {
+    position:relative;
+    width:100%;
+    max-width:300px;
+}
+
+#suggestions {
+    position:absolute;
+    width:100%;
+    background:white;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    max-height:150px;
+    overflow-y:auto;
+    display:none;
+    z-index:10;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container" id="container">
+
+<!-- PAGE 1 -->
+<div class="page page1">
+    <h1>Hola! 💖</h1>
+    <p>Dalam rangka memasuki quarter life yang masih banyak bingungnya dan butuh support+kehadiran orang-orang sekitar ini, aku mengundang kamu di ulang tahunku yang ke-25, hehe. (temenin aku tiup lilin pls) 🎂</p>
+    <button class="btn" onclick="nextPage()">Buka ➡️</button>
+</div>
+
+<!-- PAGE 2 -->
+<div class="page page2">
+    <h1>Ulang Tahun Fika ke-25 📅</h1>
+    <p>13 April 2026</p>
+    <p>12.00 PM (jam istirahat)</p>
+    <p>Desk Timur-1</p>
+    <button class="btn" onclick="nextPage()">Lanjut ➡️</button>
+</div>
+
+<!-- PAGE 3 -->
+<div class="page page3">
+    <h1>Konfirmasi Kehadiran 💌</h1>
+
+    <div class="form-box">
+        <input id="nama" placeholder="Nama">
+
+        <select id="hadir">
+            <option value="">Bisa Dateng Gaaaa</option>
+            <option value="Hadir">Hadir</option>
+            <option value="Anter untuk YMMA (Yang Mess-Mess
+Aja)">Anter untuk YMMA (Yang Mess-Mess
+Aja)</option>
+            <option value="Taro kulkas aja">Taro kulkas aja</option>
+            <option value="Tidak Hadir">Tidak Hadir</option>
+        </select>
+
+        <textarea id="wishes" placeholder="Wishes-nya dulu jangan lupa"></textarea>
+
+        <button class="btn" onclick="nextPage()">Lanjut ➡️</button>
+    </div>
+</div>
+
+<!-- PAGE 4 -->
+<div class="page page4">
+    <h1>Pilih Traktiran Minummm 🍹</h1>
+
+    <!-- GAMBAR MENU -->
+    <img src="https://drive.google.com/file/d/1KJvkhcDHnuzpgKPncjIN09gTxUnFAl5g/view?usp=sharing" style="width:90%; max-width:300px; border-radius:20px; margin-bottom:15px;">
+
+    <!-- SEARCH -->
+    <div class="search-wrapper">
+        <input 
+            type="text" 
+            id="searchMenu" 
+            placeholder="Isi maunya apaaa" 
+            oninput="showSuggestions()"
+            autocomplete="off"
+        >
+        <div id="suggestions"></div>
+    </div>
+
+    <p id="selectedText"></p>
+
+    <!-- LEVEL -->
+    <select id="sugar">
+        <option value="">Sugar Level</option>
+        <option value="Normal">Normal</option>
+        <option value="Less">Less</option>
+        <option value="No Sugar">No Sugar</option>
+    </select>
+
+    <select id="ice">
+        <option value="">Ice Level</option>
+        <option value="Normal">Normal</option>
+        <option value="Less">Less</option>
+        <option value="No Ice">No Ice</option>
+    </select>
+
+    <button class="btn" onclick="kirimSemua()">Submit 💖</button>
+</div>
+
+<!-- PAGE 5 -->
+<div class="page page5">
+    <h1>Makaasiiii 🎉</h1>
+    <p>Makasih ya udah nemenin anak rantau ini tiup lilin di ulang tahun ke-25. Semoga ucapan dan doa baiknya berbalik ke kamu 💖</p>
+</div>
+
+</div>
+
+<script>
+let page = 0;
+let selectedMenu = "";
+
+/* MENU LIST */
+let menuList = [
+"Chocolate","Esteh Susu Nusaberry","Es Teh Susu Nusantara",
+"Esteh Lemonade Berry","Es Teh Mango Greentea","Chize Red Velvet",
+"Chizu Avocado","Chizu Taro","Es Teh Original","Es Teh Hijau Original",
+"Es Teh Melati","Es Teh Red Velvet","Es Teh Avocado","Thai Tea",
+"Es Teh Lemon","Es Teh Leci","Es Teh Taro","Brown Sugar",
+"Sea Salt Cookies & Cream","Milo","Es Teh Mactha"
+];
+
+function nextPage(){
+    if(page < 4){
+        page++;
+        document.getElementById("container").style.transform =
+        "translateX(-"+(page*100)+"vw)";
+    }
+}
+
+/* AUTOCOMPLETE */
+function showSuggestions(){
+    let input = document.getElementById("searchMenu").value.toLowerCase();
+    let box = document.getElementById("suggestions");
+
+    box.innerHTML = "";
+
+    if(input === ""){
+        box.style.display = "none";
+        return;
+    }
+
+    let filtered = menuList.filter(menu =>
+        menu.toLowerCase().includes(input)
+    );
+
+    filtered.forEach(menu => {
+        let div = document.createElement("div");
+        div.innerText = menu;
+        div.style.padding = "10px";
+        div.style.cursor = "pointer";
+
+        div.onclick = function(){
+            document.getElementById("searchMenu").value = menu;
+            selectedMenu = menu;
+            document.getElementById("selectedText").innerText =
+                "Menu dipilih: " + menu;
+            box.style.display = "none";
+        };
+
+        box.appendChild(div);
+    });
+
+    box.style.display = "block";
+}
+
+/* SUBMIT */
+function kirimSemua(){
+
+    let nama = document.getElementById("nama").value;
+    let hadir = document.getElementById("hadir").value;
+    let wishes = document.getElementById("wishes").value;
+    let sugar = document.getElementById("sugar").value;
+    let ice = document.getElementById("ice").value;
+
+    if(!nama || !hadir || !selectedMenu){
+        alert("Lengkapi data dulu ya!");
+        return;
+    }
+
+    let url = "https://docs.google.com/forms/d/e/1FAIpQLSd2thejIndxRG5yizbIJN40iuyllHY8ktLu59YbPhnG6Pzudw/formResponse";
+
+    let data = new FormData();
+
+    data.append("entry.559352220", nama);
+    data.append("entry.877086558", hadir);
+    data.append("entry.1006510526", wishes);
+
+    data.append("entry.186230675", selectedMenu);
+    data.append("entry.1293001739", sugar);
+    data.append("entry.627228135", ice);
+
+    fetch(url,{
+        method:"POST",
+        mode:"no-cors",
+        body:data
+    });
+
+    nextPage();
+}
+</script>
+
+</body>
+</html>
